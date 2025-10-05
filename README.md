@@ -1,15 +1,15 @@
 # conectapp
 
-* Aplicación para crear Recordatorios de Postura Corporal correcta.
-* Este es un demostrador técnico de una aplicación desarrollada en Flutter para Android.
-* Algunos de los objetivos es construir una interfaz simple y amigable para adultos senior.
+Aplicación para crear Recordatorios de Postura Corporal correcta. Este es un demostrador técnico 
+de una aplicación desarrollada en Flutter para Android. Uno de los objetivos de esta aplicación es 
+que tenga una interfaz simple y amigable para adulto mayor.
 
-# ¿ Cómo agrego un recordatorio ?
+## ¿ Cómo agrego un recordatorio ?
 Selecciona el botón "Agrega Recordatorio" en la parte inferior de la pantalla,
 llena los campos básicos y elige la frecuencia con la que quieres que te notifique,
 un mensaje de la tarea y selecciona el  botón "Crear Recordatorio".
 
-# ¿ Quieres actualizar o eliminar tu recordatorio ? 
+## ¿ Quieres actualizar o eliminar tu recordatorio ? 
 
 Selecciona el recordatorio que quieres actualizar en la vista principal,
 y actualiza lo que necesites:
