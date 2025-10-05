@@ -39,7 +39,7 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMM dd, yyyy');
+    final dateFormat = DateFormat('dd MMM, yyyy');
     final timeFormat = DateFormat('hh:mm a');
     final stateColor = _getStateColor();
 
@@ -64,19 +64,19 @@ class ReminderCard extends StatelessWidget {
         return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete Reminder'),
-            content: Text('Delete "${reminder.title}"?'),
+            title: const Text('Eliminar Recordatorio'),
+            content: Text('Eliminar "${reminder.title}"?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: const Text('Cancelar'),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.errorColor,
                 ),
-                child: const Text('Delete'),
+                child: const Text('Eliminar'),
               ),
             ],
           ),

@@ -66,7 +66,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Initialization error: $e'),
+            content: Text('Error de inicialización: $e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -143,7 +143,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     if (!_isInitialized) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please wait, services are initializing...'),
+          content: Text('Un minuto, inicializando servicios...'),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -156,7 +156,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     if (combinedDateTime.isBefore(DateTime.now())) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Cannot set reminder in the past'),
+          content: Text('Recordatorio debe tener fecha futura'),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -200,7 +200,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              _isEditing ? 'Reminder updated!' : 'Reminder created!',
+              _isEditing ? 'Recordatorio actualizado!' : 'Recordatorio creado!',
             ),
             backgroundColor: AppTheme.secondaryColor,
           ),
@@ -223,11 +223,87 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     }
   }
 
+  // Delete reminder
+  Future<void> _deleteReminder() async {
+    if (!_isEditing) return;
+
+    // Ensure services are initialized
+    if (!_isInitialized) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Un minuto, inicializando servicios...'),
+          backgroundColor: AppTheme.errorColor,
+        ),
+      );
+      return;
+    }
+
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Eliminar Recordatorio'),
+        content: Text('Confirma para eliminar "${widget.reminder!.title}"'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.errorColor,
+            ),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Delete from local storage
+      await _localStorage.deleteReminder(widget.reminder!.id);
+
+      // Delete from Firestore
+      await _firestoreService.deleteReminderFromFirestore(widget.reminder!.id);
+
+      // Cancel notification
+      await _notificationService.cancelNotification(widget.reminder!.id);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Recordatorio borrado!'),
+            backgroundColor: AppTheme.secondaryColor,
+          ),
+        );
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error borrando: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Reminder' : 'New Reminder'),
+        title: Text(_isEditing ? 'Editar Recordatorio' : 'Nuevo Recordatorio'),
       ),
       body: _isLoading
           ? Center(
@@ -237,7 +313,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             const CircularProgressIndicator(),
             const SizedBox(height: 24),
             Text(
-              _isInitialized ? 'Saving...' : 'Initializing...',
+              _isInitialized ? 'Guardando...' : 'Inicializando...',
               style: const TextStyle(fontSize: 18),
             ),
           ],
@@ -254,14 +330,14 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  labelText: 'Title',
-                  hintText: 'E.g., Check your posture',
+                  labelText: 'Título',
+                  hintText: 'E.g., Chequea tu postura',
                   prefixIcon: Icon(Icons.title),
                 ),
                 style: Theme.of(context).textTheme.bodyLarge,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a title';
+                    return 'Ingresa un título';
                   }
                   return null;
                 },
@@ -269,7 +345,6 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               ),
 
               const SizedBox(height: 24),
-
               // Description field
               TextFormField(
                 controller: _descriptionController,
@@ -289,9 +364,9 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.calendar_today, size: 32),
-                title: const Text('Date'),
+                title: const Text('Fecha'),
                 subtitle: Text(
-                  DateFormat('EEEE, MMMM dd, yyyy').format(_selectedDate),
+                  DateFormat('EEEE, dd MMMM, yyyy').format(_selectedDate),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios),
@@ -312,7 +387,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.access_time, size: 32),
-                title: const Text('Time'),
+                title: const Text('Hora'),
                 subtitle: Text(
                   _selectedTime.format(context),
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -333,7 +408,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
               // Frequency selector
               Text(
-                'Frequency',
+                'Frecuencia',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 12),
@@ -360,7 +435,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                 onPressed: _saveReminder,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(_isEditing ? 'Update Reminder' : 'Create Reminder'),
+                  child: Text(_isEditing ? 'Actualizar Recordatorio' : 'Crear Recordatorio'),
                 ),
               ),
 
@@ -371,9 +446,28 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
-                  child: Text('Cancel'),
+                  child: Text('Cancelar'),
                 ),
               ),
+
+              // Delete button (only show when editing)
+              if (_isEditing) ...[
+                const SizedBox(height: 24),
+                const Divider(),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: _deleteReminder,
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    child: Text('Eliminar Recordatorio'),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.errorColor,
+                    side: const BorderSide(color: AppTheme.errorColor, width: 2),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

@@ -172,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!_isInitialized) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please wait, app is initializing...'),
+          content: Text('Espera, app está inicializando...'),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -196,19 +196,19 @@ class _HomeScreenState extends State<HomeScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Reminder'),
-        content: Text('Are you sure you want to delete "${reminder.title}"?'),
+        title: const Text('Eliminar Recordatorio'),
+        content: Text('Confirma para eliminar "${reminder.title}"'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,
             ),
-            child: const Text('Delete'),
+            child: const Text('Eliminar'),
           ),
         ],
       ),
@@ -228,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            const Text('Posture Reminders'),
+            const Text('Con Postura'),
             if (!_isOnline) ...[
               const SizedBox(width: 12),
               Container(
@@ -263,19 +263,19 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: null,
-                child: Text('All Reminders'),
+                child: Text('Todo'),
               ),
               const PopupMenuItem(
                 value: ReminderState.pending,
-                child: Text('Pending'),
+                child: Text('Pendiente'),
               ),
               const PopupMenuItem(
                 value: ReminderState.completed,
-                child: Text('Completed'),
+                child: Text('Completado'),
               ),
               const PopupMenuItem(
                 value: ReminderState.skipped,
-                child: Text('Skipped'),
+                child: Text('Omitido'),
               ),
             ],
           ),
@@ -289,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
             CircularProgressIndicator(),
             SizedBox(height: 24),
             Text(
-              'Initializing app...',
+              'Inicializando app...',
               style: TextStyle(fontSize: 18),
             ),
           ],
@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ? FloatingActionButton.extended(
         onPressed: () => _navigateToForm(),
         icon: const Icon(Icons.add),
-        label: const Text('Add Reminder'),
+        label: const Text('Agrega Recordatorio'),
       )
           : null, // Hide FAB until initialized
     );
