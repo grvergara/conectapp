@@ -3,25 +3,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 import 'services/notification_service.dart';
+import 'services/logger_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase with error handling (offline-safe)
+  log.initialize();
+
   try {
     await Firebase.initializeApp();
-    print('Firebase initialized successfully');
+    log.info('Firebase initialized successfully');
   } catch (e) {
-    print('Firebase initialization failed (offline?): $e');
-    // App continues without Firebase - will work offline
+    log.error('Firebase initialization failed (offline?): $e');
   }
 
   // Initialize Notification Service
   try {
     await NotificationService().initialize();
-    print('Notification service initialized');
+    log.info('Notification service initialized');
   } catch (e) {
-    print('Notification service failed: $e');
+    log.error('Notification service failed: $e');
   }
 
   runApp(const GoodPostureApp());

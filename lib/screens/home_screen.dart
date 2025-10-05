@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/reminder.dart';
-import '../services/local_storage_service.dart';
 import '../services/firestore_service.dart';
+import '../services/logger_service.dart';
+import '../services/local_storage_service.dart';
 import '../services/notification_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/reminder_card.dart';
 import 'reminder_form_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _initializeServices();
+    log.info('HomeScreen initialized');
   }
 
   // Initialize all services
@@ -52,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _listenToFirestoreChanges();
       _checkConnectivity();
     } catch (e) {
-      print('Error initializing services: $e');
+      log.error('Error initializing services: $e');
       // Even if Firestore fails, we can continue with local storage
       if (mounted) {
         setState(() {
@@ -261,10 +264,11 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: null,
-                child: Text('Todo'),
-              ),
+              // TODO: implement filters for TODO
+              // const PopupMenuItem(
+              //  value: null,
+              //  child: Text('Todo'),
+              //),
               const PopupMenuItem(
                 value: ReminderState.pending,
                 child: Text('Pendiente'),

@@ -349,8 +349,8 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description (Optional)',
-                  hintText: 'E.g., Sit up straight, shoulders back',
+                  labelText: 'Descripción',
+                  hintText: 'Ej., Siéntate derecho, hombros rectos.',
                   prefixIcon: Icon(Icons.description),
                 ),
                 style: Theme.of(context).textTheme.bodyLarge,

@@ -172,11 +172,11 @@ extension ReminderFrequencyExtension on ReminderFrequency {
   String get displayName {
     switch (this) {
       case ReminderFrequency.nonRepeat:
-        return 'One Time';
+        return 'Una Vez';
       case ReminderFrequency.daily:
-        return 'Daily';
+        return 'Diaria';
       case ReminderFrequency.weekly:
-        return 'Weekly';
+        return 'Semanal';
     }
   }
 }

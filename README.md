@@ -1,16 +1,19 @@
 # conectapp
 
-A new Flutter project.
+Aplicación para crear Recordatorios de Postura Corporal correcta. 
+Este es un demostrador técnico de una aplicación desarrollada en Flutter para Android. 
 
-## Getting Started
+Algunos de los objetivos es construir una interfaz simple y amigable para adultos senior.
 
-This project is a starting point for a Flutter application.
+Selecciona el botón "Agrega Recordatorio" en la parte inferior de la pantalla, llena los campos básicos y 
+elige la frecuencia con la que quieres que te notifique, un mensaje de la tarea y selecciona el 
+botón "Crear Recordatorio".
 
-A few resources to get you started if this is your first Flutter project:
+¿ Quieres actualizar o eliminar tu recordatorio ? 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Selecciona el recordatorio que quieres actualizar en la vista principal, y actualiza lo que necesites:
+fecha, frecuencia , título o descripción. Para finalizar el recordatorio, selecciona el botón "Actualizar Recordatorio".
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Para eliminar, selecciona el botón rojo "Eliminar Recordatorio" al final de la tarjeta.
+
+BUG conocido: No está implementado aún eliminar un recordatorio al deslizar hacia la derecha en la vista prinicipal.
